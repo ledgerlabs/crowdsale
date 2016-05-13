@@ -69,6 +69,8 @@
         selectedAccount = accounts[0];
       });
 
+      // deploy your crowdsale contract
+      // uncomment this to deploy the crowdsale
       /*crowdsaleInstance = Crowdsale.new(_price, _initialAmount,
        {
          from: selectedAccount,
@@ -104,6 +106,9 @@
 
       // add click for contribute button
       document.querySelector("#contribute").addEventListener('click', function(){
+        // set the notice
+        document.querySelector("#contributeRespnse").classList.remove("hidden");
+
         // token amount and calc token value
         var tokenAmount = parseInt(document.querySelector("#contributeAmount").value, 10);
         var txValue = parseInt(tokenAmount / 100, 10);
@@ -115,12 +120,15 @@
           value: txValue,
           to: crowdsaleInstance.address
         }, function(err, result){
-          console.log('contribution tx', err, result);
+          if(err)
+            document.querySelector("#contributeResponse_body").innerHTML = "There was an error processing your contribution: <br />" + String(err);
+          else
+            document.querySelector("#contributeResponse_body").innerHTML = "Your contribution is being processed... <br /><br /> Transaciton Hash: " + result;
         });
 
         // listen for contribution in crowdsale contract
         crowdsaleInstance.Contributed({_sender: selectedAccount}, function(err, result){
-          console.log('Contribution Made!');
+          document.querySelector("#contributeResponse_body").innerHTML = "Your contribution has been processed! <br /><br /> Transaciton Hash: " + result;
         });
       });
     </script>
