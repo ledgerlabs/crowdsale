@@ -50,6 +50,7 @@ contract Standard_Token {
 }
 
 contract Crowdsale {
+  event Contributed(address _sender, uint _value, uint _amount);
   uint public price;
   address public token;
 
@@ -60,7 +61,9 @@ contract Crowdsale {
   }
 
   function () {
-    if(msg.value > 0)
+    if(msg.value > 0) {
       Standard_Token(token).transfer(msg.sender, msg.value * price);
+      Contributed(msg.sender, msg.value, msg.value * price);
+    }
   }
 }
